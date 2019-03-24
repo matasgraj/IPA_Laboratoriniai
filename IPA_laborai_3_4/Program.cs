@@ -10,10 +10,6 @@ namespace IPA_laborai_3_4
         {
             string dataInput = "";
 
-            List<Student> students = new List<Student>();
-            List<Student> sortedStudents = new List<Student>();
-
-
             Console.WriteLine("Iveskite savo pasirinkima:");
             Console.WriteLine("1 - duomenu ivedimas ranka;");
             Console.WriteLine("2 - duomenu ivedimas is failo;");
@@ -36,12 +32,6 @@ namespace IPA_laborai_3_4
 
                 Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
             }
-
-            if (students.Any())
-            {
-                sortedStudents = students.OrderBy(o => o.Name).ToList();
-                StudentsTable(sortedStudents);
-            }
         }
 
         public static void InputByConsole()
@@ -61,6 +51,8 @@ namespace IPA_laborai_3_4
                     students.Add(stud);
                 }
             }
+
+            StudentSort(students);
         }
 
         public static void InputByFile()
@@ -68,7 +60,6 @@ namespace IPA_laborai_3_4
             string[] fileInput;
             List<Student> students = new List<Student>();
 
-            // TODO: exception handling
             try
             {
                 fileInput = System.IO.File.ReadAllLines(
@@ -78,13 +69,25 @@ namespace IPA_laborai_3_4
                     Student stud = GetStudentData(true, line);
                     students.Add(stud);
                 }
+
+                StudentSort(students);
             }
-            catch 
+            catch
             {
                 Console.WriteLine("!!!!!!!!!");
                 Console.WriteLine("Ivyko klaida bandant ikelti faila, rezultatus iveskite per konsole");
                 Console.WriteLine("!!!!!!!!!");
                 InputByConsole();
+            }
+        }
+
+        public static void StudentSort(List<Student> students)
+        {
+            List<Student> sortedStudents = new List<Student>();
+            if (students.Any())
+            {
+                sortedStudents = students.OrderBy(o => o.Name).ToList();
+                StudentsTable(sortedStudents);
             }
         }
 
@@ -95,7 +98,7 @@ namespace IPA_laborai_3_4
             string input;
             string[] inputLine = {""};
 
-            int testResult;
+            int testResult = 0;
 
             double avgHWResult = 0, medianResult = 0, avgResult = 0;
 
@@ -122,8 +125,18 @@ namespace IPA_laborai_3_4
             {
                 for (int i = 2; i < inputLine.Length; i++)
                 {
-                    // TODO: exception handling
-                    homeWorkResults.Add(int.Parse(inputLine[i]));
+                    try
+                    {
+                        homeWorkResults.Add(int.Parse(inputLine[i]));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("{0} {1} {2} namu darbo rezultatas netinkamai ivestas!", name, surname,
+                            i - 1);
+                        Console.WriteLine("Programa baigia darba.");
+                        Environment.Exit(1);
+
+                    }
                 }
             }
             else
@@ -139,10 +152,24 @@ namespace IPA_laborai_3_4
 
 
             /* Egzamino rezultato ivedimas */
-            // TODO: exception handling
-            testResult = isInputFromFile
-                ? int.Parse(inputLine[inputLine.Length - 1])
-                : GetStudentTestResult(generateNumbers);
+            if (isInputFromFile)
+            {
+                try
+                {
+                    testResult = int.Parse(inputLine[inputLine.Length - 1]);
+                }
+                catch
+                {
+                    Console.WriteLine("{0} {1} egzamino rezultatas netinkamai ivestas!", name, surname);
+                    Console.WriteLine("Programa baigia darba.");
+                    Environment.Exit(1);
+
+                }
+            }
+            else
+            {
+                testResult = GetStudentTestResult(generateNumbers);
+            }
 
             /* Vidurkio skaiciavimas */
             if (isInputFromFile)
