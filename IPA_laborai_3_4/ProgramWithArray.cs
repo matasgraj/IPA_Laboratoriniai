@@ -9,8 +9,10 @@ namespace IPA_laborai_3_4
         public static void MainWithArray(string[] args)
         {
             List<Student> students = new List<Student>();
-
-            bool continueInput = true;
+            
+            // change to TRUE if want to activate this feature
+            bool continueInput = false;
+            
             while (continueInput)
             {
                 Console.WriteLine("/-/-/-/");
@@ -173,7 +175,7 @@ namespace IPA_laborai_3_4
 
             avgResult = 0.3 * avgHWResult + 0.7 * testResult;
 
-            Student stud = new Student(name, surname, avgResult, isAvgSelected);
+            Student stud = new Student(name, surname, avgResult, 0, false, isAvgSelected);
             return stud;
         }
 
@@ -211,14 +213,14 @@ namespace IPA_laborai_3_4
             {
                 int columnNameOffset = columnVardasLenght - stud.Name.Length + defaultOffset;
                 int columnSurnameOffset = columnPavardeLength - stud.Surname.Length + defaultOffset +
-                                          (tableAvg.Length - stud.Result.ToString().Length - 3) + 2;
+                                          (tableAvg.Length - stud.AvgResult.ToString().Length - 3) + 2;
                 Console.WriteLine("{0}{1}{2}{3}",
                     FormatSpaces(stud.Name, ' ', columnNameOffset),
                     FormatSpaces(stud.Surname, ' ', columnSurnameOffset),
                     stud.isAvgSelected
-                        ? $"{stud.Result:F2}"
+                        ? $"{stud.AvgResult:F2}"
                         : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
-                    !stud.isAvgSelected ? $"{stud.Result:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                    !stud.isAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
             }
         }
 

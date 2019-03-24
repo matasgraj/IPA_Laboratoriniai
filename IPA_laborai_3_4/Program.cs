@@ -8,14 +8,19 @@ namespace IPA_laborai_3_4
     {
         public string Name;
         public string Surname;
-        public double Result;
+        public double AvgResult;
+        public double MedianResult;
+        public bool isInputFromFile;
         public bool isAvgSelected;
 
-        public Student(string vName, string vSurname, double vResult, bool vIsAvgSelected)
+        public Student(string vName, string vSurname, double vAvgResult, double vMedianResult, bool vIsInputFromFile,
+            bool vIsAvgSelected)
         {
             Name = vName;
             Surname = vSurname;
-            Result = vResult;
+            AvgResult = vAvgResult;
+            MedianResult = vMedianResult;
+            isInputFromFile = vIsInputFromFile;
             isAvgSelected = vIsAvgSelected;
         }
     }
@@ -87,16 +92,15 @@ namespace IPA_laborai_3_4
             string input;
             string[] inputLine = line.Split(' ');
 
-            int testResult = 0;
+            int testResult;
 
-            double avgHWResult = 0, avgResult = 0;
+            double avgHWResult = 0, medianResult = 0, avgResult = 0;
 
             bool continueInput = true;
-            bool isAvgSelected;
+            bool isAvgSelected = true;
             bool generateNumbers = false;
 
             List<int> homeWorkResults = new List<int>();
-            Random random = new Random();
 
             /* Vardo ivedimas */
             name = isInputFromFile ? inputLine[0] : GetStudentName();
@@ -129,25 +133,29 @@ namespace IPA_laborai_3_4
             /* Egzamino rezultato ivedimas */
             // TODO: exception handling
             testResult = isInputFromFile
-                ? int.Parse(inputLine[inputLine.Length-1])
+                ? int.Parse(inputLine[inputLine.Length - 1])
                 : GetStudentTestResult(generateNumbers);
 
             /* Vidurkio skaiciavimas */
             if (isInputFromFile)
             {
-                isAvgSelected = true;
+                avgResult = 0.3 * GetStudentAvgHWResult(homeWorkResults) + 0.7 * testResult;
+                medianResult = 0.3 * GetStudentMedianHWResult(homeWorkResults) + 0.7 * testResult;
             }
             else
             {
-            isAvgSelected = GetStudentChoiceOfAvg();
-            avgHWResult = isAvgSelected
-                ? GetStudentAvgHWResult(homeWorkResults)
-                : GetStudentMedianHWResult(homeWorkResults);
+                isAvgSelected = GetStudentChoiceOfAvg();
+                if (isAvgSelected)
+                {
+                    avgResult = 0.3 * GetStudentAvgHWResult(homeWorkResults) + 0.7 * testResult;
+                }
+                else
+                {
+                    medianResult = 0.3 * GetStudentMedianHWResult(homeWorkResults) + 0.7 * testResult;
+                }
             }
 
-            avgResult = 0.3 * avgHWResult + 0.7 * testResult;
-
-            Student stud = new Student(name, surname, avgResult, isAvgSelected);
+            Student stud = new Student(name, surname, avgResult, medianResult, isInputFromFile, isAvgSelected);
             return stud;
         }
 
@@ -181,8 +189,6 @@ namespace IPA_laborai_3_4
 
         public static List<int> GetStudentHomeWorkSum(bool generateNumbers)
         {
-            string input;
-
             bool continueInput = true;
 
             List<int> homeWorkResults = new List<int>();
@@ -340,14 +346,25 @@ namespace IPA_laborai_3_4
             {
                 int columnNameOffset = columnVardasLenght - stud.Name.Length + defaultOffset;
                 int columnSurnameOffset = columnPavardeLength - stud.Surname.Length + defaultOffset +
-                                          (tableAvg.Length - stud.Result.ToString().Length - 3) + 2;
-                Console.WriteLine("{0}{1}{2}{3}",
+                                          (tableAvg.Length - stud.AvgResult.ToString().Length - 3) + 2;
+                Console.Write("{0}{1}",
                     FormatSpaces(stud.Name, ' ', columnNameOffset),
-                    FormatSpaces(stud.Surname, ' ', columnSurnameOffset),
-                    stud.isAvgSelected
-                        ? $"{stud.Result:F2}"
-                        : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
-                    !stud.isAvgSelected ? $"{stud.Result:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                    FormatSpaces(stud.Surname, ' ', columnSurnameOffset));
+
+                if (stud.isInputFromFile)
+                {
+                    // TODO:
+                }
+                else
+                {
+                    Console.WriteLine("{0} {1}",stud.isAvgSelected
+                            ? $"{stud.AvgResult:F2}"
+                            : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
+                        !stud.isAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                }
+                   
+                    
+                    
             }
         }
 
