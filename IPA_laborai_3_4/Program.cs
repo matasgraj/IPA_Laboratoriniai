@@ -51,12 +51,17 @@ namespace IPA_laborai_3_4
             string name;
             string surname;
             string input;
+
             int testResult = 0;
+
             double avgHWResult = 0, avgResult = 0;
+
             bool continueInput = true;
             bool isAvgSelected;
+            bool generateNumbers = false;
 
             List<int> homeWorkResults = new List<int>();
+            Random random = new Random();
 
             /* Vardo ivedimas */
             Console.WriteLine("*-*-*-*");
@@ -78,13 +83,31 @@ namespace IPA_laborai_3_4
 
             /* Namu darbu rezultatu ivedimas */
             Console.WriteLine("*-*-*-*");
-            Console.WriteLine("Iveskite namu darbu rezultatus (1-10): ");
+            Console.WriteLine("Ar sugeneruoti balus? Y/N");
+            input = Console.ReadLine();
+            if (input.ToLower().Equals("y"))
+            {
+                generateNumbers = true;
+            }
+            else
+            {
+                Console.WriteLine("Iveskite namu darbu rezultatus (1-10): ");
+            }
+
             while (continueInput)
             {
                 while (true)
                 {
                     int hWVal;
                     Console.WriteLine(".......");
+
+                    if (generateNumbers)
+                    {
+                        homeWorkResults.Add(random.Next(0, 11));
+                        Console.Write("Sugeneruotas rezultatas: {0}\n", homeWorkResults[homeWorkResults.Count - 1]);
+                        break;
+                    }
+
                     Console.Write("Iveskite {0} namu darbo pazymi: ", homeWorkResults.Count() + 1);
 
                     if (!int.TryParse(Console.ReadLine(), out hWVal))
@@ -109,15 +132,23 @@ namespace IPA_laborai_3_4
 
             /* Egzamino rezultato ivedimas */
             Console.WriteLine("*-*-*-*");
-            Console.Write("Egzamino pazymis: ");
+            if (!generateNumbers)
+            {
+                Console.Write("Egzamino pazymis: ");
 
-            if (!int.TryParse(Console.ReadLine(), out testResult))
-            {
-                Console.WriteLine("Turite ivesti skaiciu!");
+                if (!int.TryParse(Console.ReadLine(), out testResult))
+                {
+                    Console.WriteLine("Turite ivesti skaiciu!");
+                }
+                else if (testResult < 0 || testResult > 10)
+                {
+                    Console.WriteLine("Galimi reziai 1-10, pakartokite!");
+                }
             }
-            else if (testResult < 0 || testResult > 10)
+            else
             {
-                Console.WriteLine("Galimi reziai 1-10, pakartokite!");
+                testResult = random.Next(0, 11);
+                Console.Write("Sugeneruotas egzamino rezultatas: {0}\n", testResult);
             }
 
             /* Vidurkio skaiciavimas */
