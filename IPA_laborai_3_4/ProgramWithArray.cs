@@ -217,10 +217,10 @@ namespace IPA_laborai_3_4
                 Console.WriteLine("{0}{1}{2}{3}",
                     FormatSpaces(stud.Name, ' ', columnNameOffset),
                     FormatSpaces(stud.Surname, ' ', columnSurnameOffset),
-                    stud.isAvgSelected
+                    stud.IsAvgSelected
                         ? $"{stud.AvgResult:F2}"
                         : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
-                    !stud.isAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                    !stud.IsAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
             }
         }
 

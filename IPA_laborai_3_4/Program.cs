@@ -10,8 +10,8 @@ namespace IPA_laborai_3_4
         public string Surname;
         public double AvgResult;
         public double MedianResult;
-        public bool isInputFromFile;
-        public bool isAvgSelected;
+        public bool IsInputFromFile;
+        public bool IsAvgSelected;
 
         public Student(string vName, string vSurname, double vAvgResult, double vMedianResult, bool vIsInputFromFile,
             bool vIsAvgSelected)
@@ -20,8 +20,8 @@ namespace IPA_laborai_3_4
             Surname = vSurname;
             AvgResult = vAvgResult;
             MedianResult = vMedianResult;
-            isInputFromFile = vIsInputFromFile;
-            isAvgSelected = vIsAvgSelected;
+            IsInputFromFile = vIsInputFromFile;
+            IsAvgSelected = vIsAvgSelected;
         }
     }
 
@@ -90,7 +90,7 @@ namespace IPA_laborai_3_4
             string name;
             string surname;
             string input;
-            string[] inputLine = line.Split(' ');
+            string[] inputLine = {""};
 
             int testResult;
 
@@ -101,6 +101,11 @@ namespace IPA_laborai_3_4
             bool generateNumbers = false;
 
             List<int> homeWorkResults = new List<int>();
+
+            if (isInputFromFile && line != null)
+            {
+                inputLine = line.Split(' ');
+            }
 
             /* Vardo ivedimas */
             name = isInputFromFile ? inputLine[0] : GetStudentName();
@@ -351,20 +356,19 @@ namespace IPA_laborai_3_4
                     FormatSpaces(stud.Name, ' ', columnNameOffset),
                     FormatSpaces(stud.Surname, ' ', columnSurnameOffset));
 
-                if (stud.isInputFromFile)
+                if (stud.IsInputFromFile)
                 {
-                    // TODO:
+                    string columnAvgResultOffset = "   " + stud.AvgResult;
+                    Console.WriteLine("{0:F2} {1} {2:F2}", stud.AvgResult, FormatSpaces("", ' ',
+                        defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length), stud.MedianResult);
                 }
                 else
                 {
-                    Console.WriteLine("{0} {1}",stud.isAvgSelected
+                    Console.WriteLine("{0} {1}", stud.IsAvgSelected
                             ? $"{stud.AvgResult:F2}"
                             : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
-                        !stud.isAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                        !stud.IsAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
                 }
-                   
-                    
-                    
             }
         }
 
