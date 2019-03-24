@@ -36,7 +36,13 @@ namespace IPA_laborai_3_4
                 if (continueInput)
                 {
                     Student stud = GetStudentData();
+                    students.Add(stud);
                 }
+            }
+
+            if (students.Count() > 0)
+            {
+                StudentsTable(students);
             }
         }
 
@@ -76,6 +82,7 @@ namespace IPA_laborai_3_4
                 while (true)
                 {
                     int hWVal;
+                    Console.WriteLine(".......");
                     Console.Write("Iveskite {0} namu darbo pazymi: ", homeWorkResults.Count() + 1);
 
                     if (!int.TryParse(Console.ReadLine(), out hWVal))
@@ -113,10 +120,60 @@ namespace IPA_laborai_3_4
 
             /* Vidurkio skaiciavimas */
             avgHWResult = homeWorkResults.Average();
-            avgResult = 0.3 * avgHWResult + 0.7 + testResult;
+            avgResult = 0.3 * avgHWResult + 0.7 * testResult;
 
             Student stud = new Student(name, surname, avgResult, true);
             return stud;
+        }
+
+        public static void StudentsTable(List<Student> students)
+        {
+            string tableName = "Vardas";
+            string tableSurname = "Pavarde";
+            string tableAvg = "Galutinis (Vid.)";
+            string tableMed = "Galutinis (Med.)";
+            string tempS = "/";
+            int defaultOffset = 6;
+            int columnVardasLenght = 6; // For longest name
+            int columnPavardeLength = 7; // For longest surname
+
+            foreach (Student stud in students)
+            {
+                if (stud.Name.Length > columnVardasLenght) columnVardasLenght = stud.Name.Length;
+                if (stud.Surname.Length > columnPavardeLength) columnPavardeLength = stud.Surname.Length;
+            }
+
+            /* Column names */
+            Console.WriteLine("{0}{1}{2}{3}{4}",
+                FormatSpaces(tableName, ' ', Math.Abs(columnVardasLenght - tableName.Length) + defaultOffset),
+                FormatSpaces(tableSurname, ' ', Math.Abs(columnPavardeLength - tableSurname.Length) + defaultOffset),
+                FormatSpaces(tableAvg, ' ', defaultOffset / 2),
+                FormatSpaces(tempS, ' ', defaultOffset / 2),
+                tableMed);
+
+            Console.WriteLine(FormatSpaces("", '-',
+                columnVardasLenght + columnPavardeLength + 3 * defaultOffset + tableAvg.Length + tableMed.Length +
+                tempS.Length));
+
+            /* Results */
+            foreach (Student stud in students)
+            {
+                int columnNameOffset = columnVardasLenght - stud.Name.Length + defaultOffset;
+                int columnSurnameOffset = columnPavardeLength - stud.Surname.Length + defaultOffset +
+                                          (tableAvg.Length - stud.Result.ToString().Length - 3) + 2;
+                Console.WriteLine("{0}{1}{2}{3}",
+                    FormatSpaces(stud.Name, ' ', columnNameOffset),
+                    FormatSpaces(stud.Surname, ' ', columnSurnameOffset),
+                    stud.isAvgSelected
+                        ? $"{stud.Result:F2}"
+                        : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
+                    !stud.isAvgSelected ? $"{stud.Result:F2}" : FormatSpaces("", ' ', tableMed.Length));
+            }
+        }
+
+        static string FormatSpaces(string w, char c, int n) // Counting needed spaces
+        {
+            return w + new String(c, n);
         }
     }
 }
