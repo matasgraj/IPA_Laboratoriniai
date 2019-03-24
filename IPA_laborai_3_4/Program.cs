@@ -8,15 +8,20 @@ namespace IPA_laborai_3_4
     {
         public string Name;
         public string Surname;
-        public double Result;
-        public bool isAvgSelected;
+        public double AvgResult;
+        public double MedianResult;
+        public bool IsInputFromFile;
+        public bool IsAvgSelected;
 
-        public Student(string vName, string vSurname, double vResult, bool vIsAvgSelected)
+        public Student(string vName, string vSurname, double vAvgResult, double vMedianResult, bool vIsInputFromFile,
+            bool vIsAvgSelected)
         {
             Name = vName;
             Surname = vSurname;
-            Result = vResult;
-            isAvgSelected = vIsAvgSelected;
+            AvgResult = vAvgResult;
+            MedianResult = vMedianResult;
+            IsInputFromFile = vIsInputFromFile;
+            IsAvgSelected = vIsAvgSelected;
         }
     }
 
@@ -24,46 +29,146 @@ namespace IPA_laborai_3_4
     {
         public static void Main(string[] args)
         {
+            string dataInput = "";
+            string[] fileInput;
+
             List<Student> students = new List<Student>();
+            List<Student> sortedStudents = new List<Student>();
 
             bool continueInput = true;
-            while (continueInput)
-            {
-                Console.WriteLine("/-/-/-/");
-                Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
-                continueInput = Console.ReadLine().ToLower().Equals("y");
 
-                if (continueInput)
+            Console.WriteLine("Iveskite savo pasirinkima:");
+            Console.WriteLine("1 - duomenu ivedimas ranka;");
+            Console.WriteLine("2 - duomenu ivedimas is failo;");
+
+            while (true)
+            {
+                dataInput = Console.ReadLine();
+
+                if (dataInput.Equals("1"))
                 {
-                    Student stud = GetStudentData();
-                    students.Add(stud);
+                    while (continueInput)
+                    {
+                        Console.WriteLine("/-/-/-/");
+                        Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
+                        continueInput = Console.ReadLine().ToLower().Equals("y");
+
+                        if (continueInput)
+                        {
+                            Student stud = GetStudentData(false, null);
+                            students.Add(stud);
+                        }
+                    }
+
+                    break;
                 }
+
+                if (dataInput.Equals("2"))
+                {
+                    // TODO: exception handling
+                    fileInput = System.IO.File.ReadAllLines(
+                        @"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
+                    foreach (var line in fileInput)
+                    {
+                        Student stud = GetStudentData(true, line);
+                        students.Add(stud);
+                    }
+
+                    break;
+                }
+
+                Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
             }
 
             if (students.Count() > 0)
             {
-                StudentsTable(students);
+                sortedStudents = students.OrderBy(o => o.Name).ToList();
+                StudentsTable(sortedStudents);
             }
         }
 
-        public static Student GetStudentData()
+        public static Student GetStudentData(bool isInputFromFile, string line)
         {
             string name;
             string surname;
             string input;
+            string[] inputLine = {""};
 
-            int testResult = 0;
+            int testResult;
 
-            double avgHWResult = 0, avgResult = 0;
+            double avgHWResult = 0, medianResult = 0, avgResult = 0;
 
             bool continueInput = true;
-            bool isAvgSelected;
+            bool isAvgSelected = true;
             bool generateNumbers = false;
 
             List<int> homeWorkResults = new List<int>();
-            Random random = new Random();
+
+            if (isInputFromFile && line != null)
+            {
+                inputLine = line.Split(' ');
+            }
 
             /* Vardo ivedimas */
+            name = isInputFromFile ? inputLine[0] : GetStudentName();
+
+
+            /* Pavardes ivedimas */
+            surname = isInputFromFile ? inputLine[1] : GetStudentSurname();
+
+            /* Namu darbu rezultatu ivedimas */
+            if (isInputFromFile)
+            {
+                for (int i = 2; i < inputLine.Length; i++)
+                {
+                    // TODO: exception handling
+                    homeWorkResults.Add(int.Parse(inputLine[i]));
+                }
+            }
+            else
+            {
+                Console.WriteLine("*-*-*-*");
+                Console.WriteLine("Ar sugeneruoti balus? Y/N");
+
+                input = Console.ReadLine();
+                generateNumbers = input.ToLower().Equals("y");
+
+                homeWorkResults = GetStudentHomeWorkSum(generateNumbers);
+            }
+
+
+            /* Egzamino rezultato ivedimas */
+            // TODO: exception handling
+            testResult = isInputFromFile
+                ? int.Parse(inputLine[inputLine.Length - 1])
+                : GetStudentTestResult(generateNumbers);
+
+            /* Vidurkio skaiciavimas */
+            if (isInputFromFile)
+            {
+                avgResult = 0.3 * GetStudentAvgHWResult(homeWorkResults) + 0.7 * testResult;
+                medianResult = 0.3 * GetStudentMedianHWResult(homeWorkResults) + 0.7 * testResult;
+            }
+            else
+            {
+                isAvgSelected = GetStudentChoiceOfAvg();
+                if (isAvgSelected)
+                {
+                    avgResult = 0.3 * GetStudentAvgHWResult(homeWorkResults) + 0.7 * testResult;
+                }
+                else
+                {
+                    medianResult = 0.3 * GetStudentMedianHWResult(homeWorkResults) + 0.7 * testResult;
+                }
+            }
+
+            Student stud = new Student(name, surname, avgResult, medianResult, isInputFromFile, isAvgSelected);
+            return stud;
+        }
+
+        public static string GetStudentName()
+        {
+            string name;
             Console.WriteLine("*-*-*-*");
             while (true)
             {
@@ -72,7 +177,12 @@ namespace IPA_laborai_3_4
                 if (name.Length != 0) break;
             }
 
-            /* Pavardes ivedimas */
+            return name;
+        }
+
+        public static string GetStudentSurname()
+        {
+            string surname;
             Console.WriteLine("*-*-*-*");
             while (true)
             {
@@ -81,15 +191,19 @@ namespace IPA_laborai_3_4
                 if (surname.Length != 0) break;
             }
 
-            /* Namu darbu rezultatu ivedimas */
+            return surname;
+        }
+
+        public static List<int> GetStudentHomeWorkSum(bool generateNumbers)
+        {
+            bool continueInput = true;
+
+            List<int> homeWorkResults = new List<int>();
+            Random random = new Random();
+
+
             Console.WriteLine("*-*-*-*");
-            Console.WriteLine("Ar sugeneruoti balus? Y/N");
-            input = Console.ReadLine();
-            if (input.ToLower().Equals("y"))
-            {
-                generateNumbers = true;
-            }
-            else
+            if (!generateNumbers)
             {
                 Console.WriteLine("Iveskite namu darbu rezultatus (1-10): ");
             }
@@ -130,7 +244,14 @@ namespace IPA_laborai_3_4
                 continueInput = Console.ReadLine().ToLower().Equals("y");
             }
 
-            /* Egzamino rezultato ivedimas */
+            return homeWorkResults;
+        }
+
+        public static int GetStudentTestResult(bool generateNumbers)
+        {
+            int testResult;
+            Random random = new Random();
+
             Console.WriteLine("*-*-*-*");
             if (!generateNumbers)
             {
@@ -151,7 +272,14 @@ namespace IPA_laborai_3_4
                 Console.Write("Sugeneruotas egzamino rezultatas: {0}\n", testResult);
             }
 
-            /* Vidurkio skaiciavimas */
+            return testResult;
+        }
+
+        public static bool GetStudentChoiceOfAvg()
+        {
+            string input;
+            bool isAvgSelected;
+
             Console.WriteLine("*-*-*-*");
             while (true)
             {
@@ -172,22 +300,23 @@ namespace IPA_laborai_3_4
                 Console.WriteLine("Negalimas simbolis, pakartokite!");
             }
 
-            if (isAvgSelected)
-            {
-                avgHWResult = homeWorkResults.Average();
-            }
-            else
-            {
-                var ys = homeWorkResults.OrderBy(x => x).ToList();
-                double mid = (ys.Count() - 1) / 2.0;
-                avgHWResult = (ys[(int) (mid)] + ys[(int) (mid + 0.5)]) / 2;
-            }
+            return isAvgSelected;
+        }
 
+        public static double GetStudentAvgHWResult(List<int> homeWorkResults)
+        {
+            return homeWorkResults.Average();
+        }
 
-            avgResult = 0.3 * avgHWResult + 0.7 * testResult;
+        public static double GetStudentMedianHWResult(List<int> homeWorkResults)
+        {
+            double medianHWResult;
 
-            Student stud = new Student(name, surname, avgResult, isAvgSelected);
-            return stud;
+            var ys = homeWorkResults.OrderBy(x => x).ToList();
+            double mid = (ys.Count() - 1) / 2.0;
+            medianHWResult = (ys[(int) (mid)] + ys[(int) (mid + 0.5)]) / 2;
+
+            return medianHWResult;
         }
 
         public static void StudentsTable(List<Student> students)
@@ -224,14 +353,24 @@ namespace IPA_laborai_3_4
             {
                 int columnNameOffset = columnVardasLenght - stud.Name.Length + defaultOffset;
                 int columnSurnameOffset = columnPavardeLength - stud.Surname.Length + defaultOffset +
-                                          (tableAvg.Length - stud.Result.ToString().Length - 3) + 2;
-                Console.WriteLine("{0}{1}{2}{3}",
+                                          (tableAvg.Length - stud.AvgResult.ToString().Length - 3) + 2;
+                Console.Write("{0}{1}",
                     FormatSpaces(stud.Name, ' ', columnNameOffset),
-                    FormatSpaces(stud.Surname, ' ', columnSurnameOffset),
-                    stud.isAvgSelected
-                        ? $"{stud.Result:F2}"
-                        : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
-                    !stud.isAvgSelected ? $"{stud.Result:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                    FormatSpaces(stud.Surname, ' ', columnSurnameOffset));
+
+                if (stud.IsInputFromFile)
+                {
+                    string columnAvgResultOffset = "   " + stud.AvgResult;
+                    Console.WriteLine("{0:F2} {1} {2:F2}", stud.AvgResult, FormatSpaces("", ' ',
+                        defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length), stud.MedianResult);
+                }
+                else
+                {
+                    Console.WriteLine("{0} {1}", stud.IsAvgSelected
+                            ? $"{stud.AvgResult:F2}"
+                            : FormatSpaces("", ' ', defaultOffset + tempS.Length + tableMed.Length),
+                        !stud.IsAvgSelected ? $"{stud.AvgResult:F2}" : FormatSpaces("", ' ', tableMed.Length));
+                }
             }
         }
 

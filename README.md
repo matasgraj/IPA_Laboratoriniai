@@ -15,3 +15,10 @@ Atlikta:
 * Informacijos isvedimas i konsoles langa;
 * Papildomas .cs failas, demonstruojantis List<> pakeitima Array tipu rezultatu surinkimui;
 
+# v0.2
+
+Atlikta:
+* Duomenu nuskaitymas is failo;
+* Logikos blokai perkelti i nuosavus metodus;
+* Perdarytas konsoles isvedimas;
+* Isvedami duomenys isrikiuojami pagal varda ASC tvarka;
