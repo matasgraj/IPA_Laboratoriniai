@@ -22,3 +22,11 @@ Atlikta:
 * Logikos blokai perkelti i nuosavus metodus;
 * Perdarytas konsoles isvedimas;
 * Isvedami duomenys isrikiuojami pagal varda ASC tvarka;
+
+# v0.3
+
+Atlikta:
+* Iskelta Student klase i nauja faila;
+* Iskelti meniu pasirinkimai i atskirus metodus;
+* Pritaikytas isimciu valdymas;
+* Klaidos taisymas;

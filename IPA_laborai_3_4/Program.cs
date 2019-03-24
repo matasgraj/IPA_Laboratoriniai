@@ -4,38 +4,11 @@ using System.Linq;
 
 namespace IPA_laborai_3_4
 {
-    public class Student
-    {
-        public string Name;
-        public string Surname;
-        public double AvgResult;
-        public double MedianResult;
-        public bool IsInputFromFile;
-        public bool IsAvgSelected;
-
-        public Student(string vName, string vSurname, double vAvgResult, double vMedianResult, bool vIsInputFromFile,
-            bool vIsAvgSelected)
-        {
-            Name = vName;
-            Surname = vSurname;
-            AvgResult = vAvgResult;
-            MedianResult = vMedianResult;
-            IsInputFromFile = vIsInputFromFile;
-            IsAvgSelected = vIsAvgSelected;
-        }
-    }
-
     internal class Program
     {
         public static void Main(string[] args)
         {
             string dataInput = "";
-            string[] fileInput;
-
-            List<Student> students = new List<Student>();
-            List<Student> sortedStudents = new List<Student>();
-
-            bool continueInput = true;
 
             Console.WriteLine("Iveskite savo pasirinkima:");
             Console.WriteLine("1 - duomenu ivedimas ranka;");
@@ -47,40 +20,71 @@ namespace IPA_laborai_3_4
 
                 if (dataInput.Equals("1"))
                 {
-                    while (continueInput)
-                    {
-                        Console.WriteLine("/-/-/-/");
-                        Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
-                        continueInput = Console.ReadLine().ToLower().Equals("y");
-
-                        if (continueInput)
-                        {
-                            Student stud = GetStudentData(false, null);
-                            students.Add(stud);
-                        }
-                    }
-
+                    InputByConsole();
                     break;
                 }
 
                 if (dataInput.Equals("2"))
                 {
-                    // TODO: exception handling
-                    fileInput = System.IO.File.ReadAllLines(
-                        @"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
-                    foreach (var line in fileInput)
-                    {
-                        Student stud = GetStudentData(true, line);
-                        students.Add(stud);
-                    }
-
+                    InputByFile();
                     break;
                 }
 
                 Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
             }
+        }
 
-            if (students.Count() > 0)
+        public static void InputByConsole()
+        {
+            bool continueInput = true;
+            List<Student> students = new List<Student>();
+
+            while (continueInput)
+            {
+                Console.WriteLine("/-/-/-/");
+                Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
+                continueInput = Console.ReadLine().ToLower().Equals("y");
+
+                if (continueInput)
+                {
+                    Student stud = GetStudentData(false, null);
+                    students.Add(stud);
+                }
+            }
+
+            StudentSort(students);
+        }
+
+        public static void InputByFile()
+        {
+            string[] fileInput;
+            List<Student> students = new List<Student>();
+
+            try
+            {
+                fileInput = System.IO.File.ReadAllLines(
+                    @"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
+                foreach (var line in fileInput)
+                {
+                    Student stud = GetStudentData(true, line);
+                    students.Add(stud);
+                }
+
+                StudentSort(students);
+            }
+            catch
+            {
+                Console.WriteLine("!!!!!!!!!");
+                Console.WriteLine("Ivyko klaida bandant ikelti faila, rezultatus iveskite per konsole");
+                Console.WriteLine("!!!!!!!!!");
+                InputByConsole();
+            }
+        }
+
+        public static void StudentSort(List<Student> students)
+        {
+            List<Student> sortedStudents = new List<Student>();
+            if (students.Any())
             {
                 sortedStudents = students.OrderBy(o => o.Name).ToList();
                 StudentsTable(sortedStudents);
@@ -94,7 +98,7 @@ namespace IPA_laborai_3_4
             string input;
             string[] inputLine = {""};
 
-            int testResult;
+            int testResult = 0;
 
             double avgHWResult = 0, medianResult = 0, avgResult = 0;
 
@@ -119,10 +123,20 @@ namespace IPA_laborai_3_4
             /* Namu darbu rezultatu ivedimas */
             if (isInputFromFile)
             {
-                for (int i = 2; i < inputLine.Length; i++)
+                for (int i = 2; i < inputLine.Length - 1; i++)
                 {
-                    // TODO: exception handling
-                    homeWorkResults.Add(int.Parse(inputLine[i]));
+                    try
+                    {
+                        homeWorkResults.Add(int.Parse(inputLine[i]));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("{0} {1} {2} namu darbo rezultatas netinkamai ivestas!", name, surname,
+                            i - 1);
+                        Console.WriteLine("Programa baigia darba.");
+                        Environment.Exit(1);
+
+                    }
                 }
             }
             else
@@ -138,10 +152,24 @@ namespace IPA_laborai_3_4
 
 
             /* Egzamino rezultato ivedimas */
-            // TODO: exception handling
-            testResult = isInputFromFile
-                ? int.Parse(inputLine[inputLine.Length - 1])
-                : GetStudentTestResult(generateNumbers);
+            if (isInputFromFile)
+            {
+                try
+                {
+                    testResult = int.Parse(inputLine[inputLine.Length - 1]);
+                }
+                catch
+                {
+                    Console.WriteLine("{0} {1} egzamino rezultatas netinkamai ivestas!", name, surname);
+                    Console.WriteLine("Programa baigia darba.");
+                    Environment.Exit(1);
+
+                }
+            }
+            else
+            {
+                testResult = GetStudentTestResult(generateNumbers);
+            }
 
             /* Vidurkio skaiciavimas */
             if (isInputFromFile)
@@ -362,7 +390,8 @@ namespace IPA_laborai_3_4
                 {
                     string columnAvgResultOffset = "   " + stud.AvgResult;
                     Console.WriteLine("{0:F2} {1} {2:F2}", stud.AvgResult, FormatSpaces("", ' ',
-                        defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length), stud.MedianResult);
+                            defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length),
+                        stud.MedianResult);
                 }
                 else
                 {
