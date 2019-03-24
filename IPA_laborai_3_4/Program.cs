@@ -33,6 +33,7 @@ namespace IPA_laborai_3_4
             string[] fileInput;
 
             List<Student> students = new List<Student>();
+            List<Student> sortedStudents = new List<Student>();
 
             bool continueInput = true;
 
@@ -81,7 +82,8 @@ namespace IPA_laborai_3_4
 
             if (students.Count() > 0)
             {
-                StudentsTable(students);
+                sortedStudents = students.OrderBy(o => o.Name).ToList();
+                StudentsTable(sortedStudents);
             }
         }
 
