@@ -49,7 +49,7 @@ namespace IPA_laborai_3_4
 
                         if (continueInput)
                         {
-                            Student stud = GetStudentData();
+                            Student stud = GetStudentData(false, null);
                             students.Add(stud);
                         }
                     }
@@ -58,7 +58,13 @@ namespace IPA_laborai_3_4
 
                 if (dataInput.Equals("2"))
                 {
+                    // TODO: exception handling
                     fileInput = System.IO.File.ReadAllLines(@"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
+                    foreach (var line in fileInput)
+                    {
+                        Student stud = GetStudentData(true, line);
+                        students.Add(stud);
+                    }
                     break;
                 }
 
@@ -71,11 +77,12 @@ namespace IPA_laborai_3_4
             }
         }
 
-        public static Student GetStudentData()
+        public static Student GetStudentData(bool isInputFromFile, string line)
         {
             string name;
             string surname;
             string input;
+            string[] inputLine = line.Split(' ');
 
             int testResult = 0;
 
@@ -89,71 +96,27 @@ namespace IPA_laborai_3_4
             Random random = new Random();
 
             /* Vardo ivedimas */
-            Console.WriteLine("*-*-*-*");
-            while (true)
-            {
-                Console.Write("Iveskite studento varda: ");
-                name = Console.ReadLine();
-                if (name.Length != 0) break;
-            }
+            name = isInputFromFile ? inputLine[0] : GetStudentName();
+
 
             /* Pavardes ivedimas */
-            Console.WriteLine("*-*-*-*");
-            while (true)
-            {
-                Console.Write("Iveskite studento pavarde: ");
-                surname = Console.ReadLine();
-                if (surname.Length != 0) break;
-            }
+            surname = isInputFromFile ? inputLine[1] : GetStudentSurname();
 
+            Console.WriteLine("lenght: "+ inputLine.Length);
             /* Namu darbu rezultatu ivedimas */
-            Console.WriteLine("*-*-*-*");
-            Console.WriteLine("Ar sugeneruoti balus? Y/N");
-            input = Console.ReadLine();
-            if (input.ToLower().Equals("y"))
+            if (isInputFromFile)
             {
-                generateNumbers = true;
+                for (int i = 2; i < inputLine.Length; i++)
+                {
+                    // TODO: exception handling
+                    homeWorkResults.Add(int.Parse(inputLine[i]));
+                }
             }
             else
             {
-                Console.WriteLine("Iveskite namu darbu rezultatus (1-10): ");
+                homeWorkResults = GetStudentHomeWorkSum();
             }
-
-            while (continueInput)
-            {
-                while (true)
-                {
-                    int hWVal;
-                    Console.WriteLine(".......");
-
-                    if (generateNumbers)
-                    {
-                        homeWorkResults.Add(random.Next(0, 11));
-                        Console.Write("Sugeneruotas rezultatas: {0}\n", homeWorkResults[homeWorkResults.Count - 1]);
-                        break;
-                    }
-
-                    Console.Write("Iveskite {0} namu darbo pazymi: ", homeWorkResults.Count() + 1);
-
-                    if (!int.TryParse(Console.ReadLine(), out hWVal))
-                    {
-                        Console.WriteLine("Turite ivesti skaiciu!");
-                    }
-                    else if (hWVal < 0 || hWVal > 10)
-                    {
-                        Console.WriteLine("Galimi reziai 1-10, pakartokite!");
-                    }
-                    else
-                    {
-                        homeWorkResults.Add(hWVal);
-                        break;
-                    }
-                }
-
-                Console.WriteLine("-------");
-                Console.WriteLine("Ar norite testi namu darbu ivedima? Y/N");
-                continueInput = Console.ReadLine().ToLower().Equals("y");
-            }
+            
 
             /* Egzamino rezultato ivedimas */
             Console.WriteLine("*-*-*-*");
@@ -215,6 +178,94 @@ namespace IPA_laborai_3_4
             return stud;
         }
 
+        public static string GetStudentName()
+        {
+            string name;
+            Console.WriteLine("*-*-*-*");
+            while (true)
+            {
+                Console.Write("Iveskite studento varda: ");
+                name = Console.ReadLine();
+                if (name.Length != 0) break;
+            }
+
+            return name;
+        }
+
+        public static string GetStudentSurname()
+        {
+            string surname;
+            Console.WriteLine("*-*-*-*");
+            while (true)
+            {
+                Console.Write("Iveskite studento pavarde: ");
+                surname = Console.ReadLine();
+                if (surname.Length != 0) break;
+            }
+
+            return surname;
+        }
+
+        public static List<int> GetStudentHomeWorkSum()
+        {
+            string input;
+
+            bool generateNumbers = false, continueInput = true;
+            
+            List<int> homeWorkResults = new List<int>();
+            Random random = new Random();
+            
+            
+            Console.WriteLine("*-*-*-*");
+            Console.WriteLine("Ar sugeneruoti balus? Y/N");
+            input = Console.ReadLine();
+            if (input.ToLower().Equals("y"))
+            {
+                generateNumbers = true;
+            }
+            else
+            {
+                Console.WriteLine("Iveskite namu darbu rezultatus (1-10): ");
+            }
+
+            while (continueInput)
+            {
+                while (true)
+                {
+                    int hWVal;
+                    Console.WriteLine(".......");
+
+                    if (generateNumbers)
+                    {
+                        homeWorkResults.Add(random.Next(0, 11));
+                        Console.Write("Sugeneruotas rezultatas: {0}\n", homeWorkResults[homeWorkResults.Count - 1]);
+                        break;
+                    }
+
+                    Console.Write("Iveskite {0} namu darbo pazymi: ", homeWorkResults.Count() + 1);
+
+                    if (!int.TryParse(Console.ReadLine(), out hWVal))
+                    {
+                        Console.WriteLine("Turite ivesti skaiciu!");
+                    }
+                    else if (hWVal < 0 || hWVal > 10)
+                    {
+                        Console.WriteLine("Galimi reziai 1-10, pakartokite!");
+                    }
+                    else
+                    {
+                        homeWorkResults.Add(hWVal);
+                        break;
+                    }
+                }
+
+                Console.WriteLine("-------");
+                Console.WriteLine("Ar norite testi namu darbu ivedima? Y/N");
+                continueInput = Console.ReadLine().ToLower().Equals("y");
+            }
+
+            return homeWorkResults;
+        }
         public static void StudentsTable(List<Student> students)
         {
             string tableName = "Vardas";
