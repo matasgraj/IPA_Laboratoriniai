@@ -1,28 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace IPA_laborai_3_4
 {
-    public class Student
+    public class ProgramWithArray
     {
-        public string Name;
-        public string Surname;
-        public double Result;
-        public bool isAvgSelected;
-
-        public Student(string vName, string vSurname, double vResult, bool vIsAvgSelected)
-        {
-            Name = vName;
-            Surname = vSurname;
-            Result = vResult;
-            isAvgSelected = vIsAvgSelected;
-        }
-    }
-
-    internal class Program
-    {
-        public static void Main(string[] args)
+        public static void MainWithArray(string[] args)
         {
             List<Student> students = new List<Student>();
 
@@ -52,7 +36,7 @@ namespace IPA_laborai_3_4
             string surname;
             string input;
 
-            int testResult = 0;
+            int testResult = 0, counter = 0;
 
             double avgHWResult = 0, avgResult = 0;
 
@@ -60,7 +44,7 @@ namespace IPA_laborai_3_4
             bool isAvgSelected;
             bool generateNumbers = false;
 
-            List<int> homeWorkResults = new List<int>();
+            int[] homeWorkResults = new int[counter];
             Random random = new Random();
 
             /* Vardo ivedimas */
@@ -99,16 +83,19 @@ namespace IPA_laborai_3_4
                 while (true)
                 {
                     int hWVal;
+                    counter++;
+                    Array.Resize<int>(ref homeWorkResults, counter);
+
                     Console.WriteLine(".......");
 
                     if (generateNumbers)
                     {
-                        homeWorkResults.Add(random.Next(0, 11));
-                        Console.Write("Sugeneruotas rezultatas: {0}\n", homeWorkResults[homeWorkResults.Count - 1]);
+                        homeWorkResults[counter] = random.Next(0, 11);
+                        Console.Write("Sugeneruotas rezultatas: {0}\n", homeWorkResults[counter]);
                         break;
                     }
 
-                    Console.Write("Iveskite {0} namu darbo pazymi: ", homeWorkResults.Count() + 1);
+                    Console.Write("Iveskite {0} namu darbo pazymi: ", counter);
 
                     if (!int.TryParse(Console.ReadLine(), out hWVal))
                     {
@@ -120,7 +107,7 @@ namespace IPA_laborai_3_4
                     }
                     else
                     {
-                        homeWorkResults.Add(hWVal);
+                        homeWorkResults[counter] = hWVal;
                         break;
                     }
                 }
