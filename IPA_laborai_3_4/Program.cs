@@ -50,9 +50,11 @@ namespace IPA_laborai_3_4
         {
             string name;
             string surname;
+            string input;
             int testResult = 0;
-            double avgHWResult, avgResult;
+            double avgHWResult = 0, avgResult = 0;
             bool continueInput = true;
+            bool isAvgSelected;
 
             List<int> homeWorkResults = new List<int>();
 
@@ -119,10 +121,41 @@ namespace IPA_laborai_3_4
             }
 
             /* Vidurkio skaiciavimas */
-            avgHWResult = homeWorkResults.Average();
+            Console.WriteLine("*-*-*-*");
+            while (true)
+            {
+                Console.WriteLine("Skaiciavimui naudoti vidurki ar mediana? V/M ");
+                input = Console.ReadLine();
+                if (input.ToLower().Equals("v"))
+                {
+                    isAvgSelected = true;
+                    break;
+                }
+
+                if (input.ToLower().Equals("m"))
+                {
+                    isAvgSelected = false;
+                    break;
+                }
+
+                Console.WriteLine("Negalimas simbolis, pakartokite!");
+            }
+
+            if (isAvgSelected)
+            {
+                avgHWResult = homeWorkResults.Average();
+            }
+            else
+            {
+                var ys = homeWorkResults.OrderBy(x => x).ToList();
+                double mid = (ys.Count() - 1) / 2.0;
+                avgHWResult = (ys[(int) (mid)] + ys[(int) (mid + 0.5)]) / 2;
+            }
+
+
             avgResult = 0.3 * avgHWResult + 0.7 * testResult;
 
-            Student stud = new Student(name, surname, avgResult, true);
+            Student stud = new Student(name, surname, avgResult, isAvgSelected);
             return stud;
         }
 
