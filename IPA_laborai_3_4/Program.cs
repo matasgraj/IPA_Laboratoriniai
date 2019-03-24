@@ -9,12 +9,10 @@ namespace IPA_laborai_3_4
         public static void Main(string[] args)
         {
             string dataInput = "";
-            string[] fileInput;
 
             List<Student> students = new List<Student>();
             List<Student> sortedStudents = new List<Student>();
 
-            bool continueInput = true;
 
             Console.WriteLine("Iveskite savo pasirinkima:");
             Console.WriteLine("1 - duomenu ivedimas ranka;");
@@ -26,43 +24,67 @@ namespace IPA_laborai_3_4
 
                 if (dataInput.Equals("1"))
                 {
-                    while (continueInput)
-                    {
-                        Console.WriteLine("/-/-/-/");
-                        Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
-                        continueInput = Console.ReadLine().ToLower().Equals("y");
-
-                        if (continueInput)
-                        {
-                            Student stud = GetStudentData(false, null);
-                            students.Add(stud);
-                        }
-                    }
-
+                    InputByConsole();
                     break;
                 }
 
                 if (dataInput.Equals("2"))
                 {
-                    // TODO: exception handling
-                    fileInput = System.IO.File.ReadAllLines(
-                        @"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
-                    foreach (var line in fileInput)
-                    {
-                        Student stud = GetStudentData(true, line);
-                        students.Add(stud);
-                    }
-
+                    InputByFile();
                     break;
                 }
 
                 Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
             }
 
-            if (students.Count() > 0)
+            if (students.Any())
             {
                 sortedStudents = students.OrderBy(o => o.Name).ToList();
                 StudentsTable(sortedStudents);
+            }
+        }
+
+        public static void InputByConsole()
+        {
+            bool continueInput = true;
+            List<Student> students = new List<Student>();
+
+            while (continueInput)
+            {
+                Console.WriteLine("/-/-/-/");
+                Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
+                continueInput = Console.ReadLine().ToLower().Equals("y");
+
+                if (continueInput)
+                {
+                    Student stud = GetStudentData(false, null);
+                    students.Add(stud);
+                }
+            }
+        }
+
+        public static void InputByFile()
+        {
+            string[] fileInput;
+            List<Student> students = new List<Student>();
+
+            // TODO: exception handling
+            try
+            {
+                fileInput = System.IO.File.ReadAllLines(
+                    @"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
+                foreach (var line in fileInput)
+                {
+                    Student stud = GetStudentData(true, line);
+                    students.Add(stud);
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("!!!!!!!!!");
+                Console.WriteLine("Ivyko klaida bandant ikelti faila, rezultatus iveskite per konsole");
+                Console.WriteLine("!!!!!!!!!");
+                InputByConsole();
             }
         }
 
@@ -341,7 +363,8 @@ namespace IPA_laborai_3_4
                 {
                     string columnAvgResultOffset = "   " + stud.AvgResult;
                     Console.WriteLine("{0:F2} {1} {2:F2}", stud.AvgResult, FormatSpaces("", ' ',
-                        defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length), stud.MedianResult);
+                            defaultOffset + tempS.Length + tableMed.Length - columnAvgResultOffset.Length),
+                        stud.MedianResult);
                 }
                 else
                 {
