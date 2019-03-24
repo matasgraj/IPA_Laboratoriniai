@@ -24,20 +24,45 @@ namespace IPA_laborai_3_4
     {
         public static void Main(string[] args)
         {
+            string dataInput = "";
+            string[] fileInput;
+
             List<Student> students = new List<Student>();
 
             bool continueInput = true;
-            while (continueInput)
-            {
-                Console.WriteLine("/-/-/-/");
-                Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
-                continueInput = Console.ReadLine().ToLower().Equals("y");
 
-                if (continueInput)
+            Console.WriteLine("Iveskite savo pasirinkima:");
+            Console.WriteLine("1 - duomenu ivedimas ranka;");
+            Console.WriteLine("2 - duomenu ivedimas is failo;");
+            
+            while (true)
+            {
+                dataInput = Console.ReadLine();
+                
+                if (dataInput.Equals("1"))
                 {
-                    Student stud = GetStudentData();
-                    students.Add(stud);
+                    while (continueInput)
+                    {
+                        Console.WriteLine("/-/-/-/");
+                        Console.WriteLine("Ar norite ivesti studento duomenis? Y/N");
+                        continueInput = Console.ReadLine().ToLower().Equals("y");
+
+                        if (continueInput)
+                        {
+                            Student stud = GetStudentData();
+                            students.Add(stud);
+                        }
+                    }
+                    break;
                 }
+
+                if (dataInput.Equals("2"))
+                {
+                    fileInput = System.IO.File.ReadAllLines(@"C:\Users\Matas\RiderProjects\IPA_laborai_3_4\kursiokai.txt");
+                    break;
+                }
+
+                Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
             }
 
             if (students.Count() > 0)
