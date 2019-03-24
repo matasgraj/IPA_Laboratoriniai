@@ -123,7 +123,7 @@ namespace IPA_laborai_3_4
             /* Namu darbu rezultatu ivedimas */
             if (isInputFromFile)
             {
-                for (int i = 2; i < inputLine.Length; i++)
+                for (int i = 2; i < inputLine.Length - 1; i++)
                 {
                     try
                     {
