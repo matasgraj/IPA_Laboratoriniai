@@ -43,6 +43,7 @@ namespace IPA_laborai_3_4
 
                 if (dataInput.Equals("4"))
                 {
+                    GroupToFiles();
                     break;
                 }
 
@@ -465,6 +466,39 @@ namespace IPA_laborai_3_4
             {
                 Console.WriteLine("Failo sukurimas negalimas");
                 Console.WriteLine("Programa baigia darba");
+                Environment.Exit(1);
+            }
+        }
+
+        public static void GroupToFiles()
+        {
+            string[] dataSet;
+            string dumbPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
+            string smartPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
+
+            List<Student> dumb = new List<Student>();
+            List<Student> smart = new List<Student>();
+
+            try
+            {
+                dataSet = File.ReadAllLines(
+                    @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt");
+                foreach (var line in dataSet)
+                {
+                    var student = GetStudentData(true, line);
+                    if (student.AvgResult >= 5)
+                    {
+                        smart.Add(student);
+                    }
+                    else
+                    {
+                        dumb.Add(student);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Failas nerastas");
                 Environment.Exit(1);
             }
         }
