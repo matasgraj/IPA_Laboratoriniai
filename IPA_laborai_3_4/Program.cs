@@ -429,34 +429,43 @@ namespace IPA_laborai_3_4
 
             Random rnd = new Random();
 
-            for (int i = 0; i < 5; i++)
+            try
             {
-                entityCount *= 10;
-                string newFileName = filePath + entityCount + "students_generated.txt";
-                StringBuilder entityBuilder = new StringBuilder();
-
-                if (File.Exists(newFileName))
+                for (int i = 0; i < 5; i++)
                 {
-                    File.Delete(newFileName);
-                }
+                    entityCount *= 10;
+                    string newFileName = filePath + entityCount + "students_generated.txt";
+                    StringBuilder entityBuilder = new StringBuilder();
 
-                for (int j = 1; j <= entityCount; j++)
-                {
-                    entityBuilder.Append("Vardenis" + j + " Pavardenis" + j + " "
-                                         + rnd.Next(1, 11) + " "
-                                         + rnd.Next(1, 11) + " "
-                                         + rnd.Next(1, 11) + " "
-                                         + rnd.Next(1, 11) + " "
-                                         + rnd.Next(1, 11) + " "
-                                         + rnd.Next(1, 11) + "\n"
-                    );
-                }
+                    if (File.Exists(newFileName))
+                    {
+                        File.Delete(newFileName);
+                    }
 
-                using (FileStream fs = File.Create(newFileName))
-                {
-                    Byte[] content = new UTF8Encoding(true).GetBytes(entityBuilder.ToString());
-                    fs.Write(content, 0, content.Length);
+                    for (int j = 1; j <= entityCount; j++)
+                    {
+                        entityBuilder.Append("Vardenis" + j + " Pavardenis" + j + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + "\n"
+                        );
+                    }
+
+                    using (FileStream fs = File.Create(newFileName))
+                    {
+                        Byte[] content = new UTF8Encoding(true).GetBytes(entityBuilder.ToString());
+                        fs.Write(content, 0, content.Length);
+                    }
                 }
+            }
+            catch
+            {
+                Console.WriteLine("Failo sukurimas negalimas");
+                Console.WriteLine("Programa baigia darba");
+                Environment.Exit(1);
             }
         }
     }
