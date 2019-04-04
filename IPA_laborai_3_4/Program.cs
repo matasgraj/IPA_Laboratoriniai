@@ -424,7 +424,7 @@ namespace IPA_laborai_3_4
 
         public static void FileGenerator()
         {
-            const string filePath = "@C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
+            const string filePath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
             int entityCount = 1;
 
             Random rnd = new Random();
@@ -437,18 +437,22 @@ namespace IPA_laborai_3_4
 
                 for (int j = 1; j <= entityCount; j++)
                 {
-                    entityBuilder.Append("Vardas"+j+" Pavarde"+j+" "
-                                           +rnd.Next(1,11)+" "
-                                           +rnd.Next(1,11)+" "
-                                           +rnd.Next(1,11)+" "
-                                           +rnd.Next(1,11)+" "
-                                           +rnd.Next(1,11)+" "
-                                           +rnd.Next(1,11)+"\n"
+                    entityBuilder.Append("Vardenis" + j + " Pavardenis" + j + " "
+                                         + rnd.Next(1, 11) + " "
+                                         + rnd.Next(1, 11) + " "
+                                         + rnd.Next(1, 11) + " "
+                                         + rnd.Next(1, 11) + " "
+                                         + rnd.Next(1, 11) + " "
+                                         + rnd.Next(1, 11) + "\n"
                     );
                 }
 
+                using (FileStream fs = File.Create(newFileName))
+                {
+                    Byte[] content = new UTF8Encoding(true).GetBytes(entityBuilder.ToString());
+                    fs.Write(content, 0, content.Length);
+                }
             }
         }
-
     }
 }
