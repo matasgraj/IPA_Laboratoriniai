@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace IPA_laborai_3_4
 {
@@ -13,6 +16,8 @@ namespace IPA_laborai_3_4
             Console.WriteLine("Iveskite savo pasirinkima:");
             Console.WriteLine("1 - duomenu ivedimas ranka;");
             Console.WriteLine("2 - duomenu ivedimas is failo;");
+            Console.WriteLine("3 - failu generavimas;");
+            Console.WriteLine("4 - sugeneruotu failu efektyvumo tyrimas;");
 
             while (true)
             {
@@ -30,7 +35,18 @@ namespace IPA_laborai_3_4
                     break;
                 }
 
-                Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
+                if (dataInput.Equals("3"))
+                {
+                    FileGenerator();
+                    break;
+                }
+
+                if (dataInput.Equals("4"))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Galite rinkits 1-4, pakartokite!");
             }
         }
 
@@ -135,7 +151,6 @@ namespace IPA_laborai_3_4
                             i - 1);
                         Console.WriteLine("Programa baigia darba.");
                         Environment.Exit(1);
-
                     }
                 }
             }
@@ -163,7 +178,6 @@ namespace IPA_laborai_3_4
                     Console.WriteLine("{0} {1} egzamino rezultatas netinkamai ivestas!", name, surname);
                     Console.WriteLine("Programa baigia darba.");
                     Environment.Exit(1);
-
                 }
             }
             else
@@ -407,5 +421,34 @@ namespace IPA_laborai_3_4
         {
             return w + new String(c, n);
         }
+
+        public static void FileGenerator()
+        {
+            const string filePath = "@C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
+            int entityCount = 1;
+
+            Random rnd = new Random();
+
+            for (int i = 0; i < 5; i++)
+            {
+                entityCount *= 10;
+                string newFileName = filePath + entityCount + "students_generated.txt";
+                StringBuilder entityBuilder = new StringBuilder();
+
+                for (int j = 1; j <= entityCount; j++)
+                {
+                    entityBuilder.Append("Vardas"+j+" Pavarde"+j+" "
+                                           +rnd.Next(1,11)+" "
+                                           +rnd.Next(1,11)+" "
+                                           +rnd.Next(1,11)+" "
+                                           +rnd.Next(1,11)+" "
+                                           +rnd.Next(1,11)+" "
+                                           +rnd.Next(1,11)+"\n"
+                    );
+                }
+
+            }
+        }
+
     }
 }
