@@ -435,6 +435,11 @@ namespace IPA_laborai_3_4
                 string newFileName = filePath + entityCount + "students_generated.txt";
                 StringBuilder entityBuilder = new StringBuilder();
 
+                if (File.Exists(newFileName))
+                {
+                    File.Delete(newFileName);
+                }
+
                 for (int j = 1; j <= entityCount; j++)
                 {
                     entityBuilder.Append("Vardenis" + j + " Pavardenis" + j + " "
