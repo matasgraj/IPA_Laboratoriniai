@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace IPA_laborai_3_4
 {
@@ -13,6 +16,8 @@ namespace IPA_laborai_3_4
             Console.WriteLine("Iveskite savo pasirinkima:");
             Console.WriteLine("1 - duomenu ivedimas ranka;");
             Console.WriteLine("2 - duomenu ivedimas is failo;");
+            Console.WriteLine("3 - failu generavimas;");
+            Console.WriteLine("4 - sugeneruotu failu efektyvumo tyrimas;");
 
             while (true)
             {
@@ -30,7 +35,20 @@ namespace IPA_laborai_3_4
                     break;
                 }
 
-                Console.WriteLine("Galite rinkits tik 1 arba 2, pakartokite!");
+                if (dataInput.Equals("3"))
+                {
+                    FileGenerator();
+                    break;
+                }
+
+                if (dataInput.Equals("4"))
+                {
+                    FileGenerator();
+                    GroupToFiles();
+                    break;
+                }
+
+                Console.WriteLine("Galite rinkits 1-4, pakartokite!");
             }
         }
 
@@ -135,7 +153,6 @@ namespace IPA_laborai_3_4
                             i - 1);
                         Console.WriteLine("Programa baigia darba.");
                         Environment.Exit(1);
-
                     }
                 }
             }
@@ -163,7 +180,6 @@ namespace IPA_laborai_3_4
                     Console.WriteLine("{0} {1} egzamino rezultatas netinkamai ivestas!", name, surname);
                     Console.WriteLine("Programa baigia darba.");
                     Environment.Exit(1);
-
                 }
             }
             else
@@ -406,6 +422,130 @@ namespace IPA_laborai_3_4
         static string FormatSpaces(string w, char c, int n) // Counting needed spaces
         {
             return w + new String(c, n);
+        }
+
+        public static void FileGenerator()
+        {
+            const string filePath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\";
+            int entityCount = 1;
+
+            Random rnd = new Random();
+
+            try
+            {
+                // Generating with 10, 100, 1000, 10000, 100000 entities files
+                for (int i = 0; i < 5; i++)
+                {
+                    entityCount *= 10;
+                    string newFileName = filePath + entityCount + "students_generated.txt";
+                    StringBuilder entityBuilder = new StringBuilder();
+
+                    if (File.Exists(newFileName))
+                    {
+                        File.Delete(newFileName);
+                    }
+
+                    for (int j = 1; j <= entityCount; j++)
+                    {
+                        entityBuilder.Append("Vardenis" + j + " Pavardenis" + j + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + " "
+                                             + rnd.Next(1, 11) + "\n"
+                        );
+                    }
+                    // Creating new file and populating with entities
+                    using (FileStream fs = File.Create(newFileName))
+                    {
+                        Byte[] content = new UTF8Encoding(true).GetBytes(entityBuilder.ToString());
+                        fs.Write(content, 0, content.Length);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Failo sukurimas negalimas");
+                Console.WriteLine("Programa baigia darba");
+                Environment.Exit(1);
+            }
+        }
+
+        public static void GroupToFiles()
+        {
+            string[] dataSet;
+            string dumbPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\dumbStudents.txt";
+            string smartPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\smartStudents.txt";
+
+            List<Student> dumb = new List<Student>();
+            List<Student> smart = new List<Student>();
+
+            try
+            {    
+                // Change file path for performance tests
+                dataSet = File.ReadAllLines(
+                    @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt");
+                foreach (var line in dataSet)
+                {
+                    var student = GetStudentData(true, line);
+                    if (student.AvgResult >= 5)
+                    {
+                        smart.Add(student);
+                    }
+                    else
+                    {
+                        dumb.Add(student);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Failas nerastas");
+                Environment.Exit(1);
+            }
+
+            try
+            {
+                if (File.Exists(dumbPath) || File.Exists(smartPath))
+                {
+                    File.Delete(dumbPath);
+                    File.Delete(smartPath);
+                }
+                
+                StringBuilder stringToFile = new StringBuilder();
+                foreach (var student in dumb)
+                {   
+                    // Constructing student string from object
+                    string stud = student.Name + " " + student.Surname + " " + student.AvgResult + " " +
+                                        student.MedianResult + "\n";
+                    stringToFile.Append(stud);
+                }
+
+                using (FileStream fs = File.Create(dumbPath))
+                {
+                    Byte[] content = new UTF8Encoding(true).GetBytes(stringToFile.ToString());
+                    fs.Write(content, 0, content.Length);
+                }
+
+                stringToFile.Clear();
+                foreach (var student in smart)
+                {
+                    string stud = student.Name + " " + student.Surname + " " + student.AvgResult + " " +
+                                  student.MedianResult + "\n";
+                    stringToFile.Append(stud);
+                }
+                
+                using (FileStream fs = File.Create(smartPath))
+                {    
+                    Byte[] content = new UTF8Encoding(true).GetBytes(stringToFile.ToString());
+                    fs.Write(content, 0, content.Length);
+                }
+            }
+            catch    
+            {    
+                Console.WriteLine("Failai neirasyti");    
+            }
         }
     }
 }
