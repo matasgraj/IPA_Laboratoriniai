@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,20 @@ namespace IPA_laborai_3_4
 {
     internal class Program
     {
+        public static string[] LIST = new[]
+        {
+            "LIST",
+            "QUEUE",
+            "LINKEDLIST"
+        };
+        public static string[] PATHS = new[]
+        {
+            @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\10students_generated.txt",
+            @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100students_generated.txt",
+            @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\1000students_generated.txt",
+            @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\10000students_generated.txt",
+            @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt"
+        }
         public static void Main(string[] args)
         {
             string dataInput = "";
@@ -18,6 +33,7 @@ namespace IPA_laborai_3_4
             Console.WriteLine("2 - duomenu ivedimas is failo;");
             Console.WriteLine("3 - failu generavimas;");
             Console.WriteLine("4 - sugeneruotu failu efektyvumo tyrimas;");
+            Console.WriteLine("5 - skirtingu konteineriu testavimas");
 
             while (true)
             {
@@ -48,7 +64,29 @@ namespace IPA_laborai_3_4
                     break;
                 }
 
+                if (dataInput.Equals("5"))
+                {
+                    foreach (var list in LIST)
+                    {
+                        Console.WriteLine(list + " rusiavimas");
+                        PerformanceTesting(list);
+                    }
+                }
+
                 Console.WriteLine("Galite rinkits 1-4, pakartokite!");
+            }
+        }
+
+        public static void PerformanceTesting(string list = "LIST")
+        {
+            Stopwatch watch;
+
+            foreach (var path in PATHS)
+            {
+                watch = Stopwatch.StartNew();
+                GroupToFiles(path, false, list);
+                watch.Stop();
+                Console.WriteLine(path + " ||| uzima: " + watch.ElapsedMilliseconds);
             }
         }
 
@@ -472,7 +510,7 @@ namespace IPA_laborai_3_4
             }
         }
 
-        public static void GroupToFiles()
+        public static void GroupToFiles(string path, bool output = true, string list = "LIST")
         {
             string[] dataSet;
             string dumbPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\dumbStudents.txt";
