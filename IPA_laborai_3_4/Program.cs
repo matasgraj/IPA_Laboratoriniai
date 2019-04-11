@@ -89,7 +89,7 @@ namespace IPA_laborai_3_4
                 GroupToFiles(path, false, list);
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
-                Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds +"s");
+                Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds + "s");
             }
         }
 
@@ -557,6 +557,7 @@ namespace IPA_laborai_3_4
                             {
                                 dumbList.Add(student);
                             }
+
                             break;
                         }
                         case "LINKEDLIST":
@@ -569,6 +570,7 @@ namespace IPA_laborai_3_4
                             {
                                 dumbLinkedList.AddLast(student);
                             }
+
                             break;
                         }
                         case "QUEUE":
@@ -581,6 +583,7 @@ namespace IPA_laborai_3_4
                             {
                                 dumbQueue.Enqueue(student);
                             }
+
                             break;
                         }
                         default:
@@ -592,9 +595,9 @@ namespace IPA_laborai_3_4
                             {
                                 dumbList.Add(student);
                             }
+
                             break;
                     }
-                    
                 }
             }
             catch
@@ -629,7 +632,6 @@ namespace IPA_laborai_3_4
                     dumb = dumbList;
                     break;
                 }
-                
             }
 
             try
