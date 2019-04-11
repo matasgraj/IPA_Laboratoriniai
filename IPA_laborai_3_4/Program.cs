@@ -16,6 +16,7 @@ namespace IPA_laborai_3_4
             "QUEUE",
             "LINKEDLIST"
         };
+
         public static string[] PATHS = new[]
         {
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\10students_generated.txt",
@@ -24,6 +25,7 @@ namespace IPA_laborai_3_4
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\10000students_generated.txt",
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt"
         }
+
         public static void Main(string[] args)
         {
             string dataInput = "";
@@ -494,6 +496,7 @@ namespace IPA_laborai_3_4
                                              + rnd.Next(1, 11) + "\n"
                         );
                     }
+
                     // Creating new file and populating with entities
                     using (FileStream fs = File.Create(newFileName))
                     {
@@ -516,25 +519,81 @@ namespace IPA_laborai_3_4
             string dumbPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\dumbStudents.txt";
             string smartPath = @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\smartStudents.txt";
 
-            List<Student> dumb = new List<Student>();
-            List<Student> smart = new List<Student>();
+            List<Student> dumbList = new List<Student>();
+            List<Student> smartList = new List<Student>();
+
+            Queue<Student> dumbQueue = new Queue<Student>();
+            Queue<Student> smartQueue = new Queue<Student>();
+
+            LinkedList<Student> dumbLinkedList = new LinkedList<Student>();
+            LinkedList<Student> smartLinkedList = new LinkedList<Student>();
+
+            IEnumerable<Student> dumb;
+            IEnumerable<Student> smart;
+
+            if (!LIST.Contains(list))
+            {
+                Environment.Exit(1);
+            }
 
             try
-            {    
-                // Change file path for performance tests
-                dataSet = File.ReadAllLines(
-                    @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt");
+            {
+                dataSet = File.ReadAllLines(path);
+
                 foreach (var line in dataSet)
                 {
                     var student = GetStudentData(true, line);
-                    if (student.AvgResult >= 5)
+
+                    switch (list)
                     {
-                        smart.Add(student);
+                        case "LIST":
+                        {
+                            if (student.AvgResult >= 5)
+                            {
+                                smartList.Add(student);
+                            }
+                            else
+                            {
+                                dumbList.Add(student);
+                            }
+                            break;
+                        }
+                        case "LINKEDLIST":
+                        {
+                            if (student.AvgResult >= 5)
+                            {
+                                smartLinkedList.AddLast(student);
+                            }
+                            else
+                            {
+                                dumbLinkedList.AddLast(student);
+                            }
+                            break;
+                        }
+                        case "QUEUE":
+                        {
+                            if (student.AvgResult >= 5)
+                            {
+                                smartQueue.Enqueue(student);
+                            }
+                            else
+                            {
+                                dumbQueue.Enqueue(student);
+                            }
+                            break;
+                        }
+                        default:
+                            if (student.AvgResult >= 5)
+                            {
+                                smartList.Add(student);
+                            }
+                            else
+                            {
+                                dumbList.Add(student);
+                            }
+                            break;
                     }
-                    else
-                    {
-                        dumb.Add(student);
-                    }
+                    
                 }
             }
             catch
@@ -550,13 +609,13 @@ namespace IPA_laborai_3_4
                     File.Delete(dumbPath);
                     File.Delete(smartPath);
                 }
-                
+
                 StringBuilder stringToFile = new StringBuilder();
                 foreach (var student in dumb)
-                {   
+                {
                     // Constructing student string from object
                     string stud = student.Name + " " + student.Surname + " " + student.AvgResult + " " +
-                                        student.MedianResult + "\n";
+                                  student.MedianResult + "\n";
                     stringToFile.Append(stud);
                 }
 
@@ -573,16 +632,16 @@ namespace IPA_laborai_3_4
                                   student.MedianResult + "\n";
                     stringToFile.Append(stud);
                 }
-                
+
                 using (FileStream fs = File.Create(smartPath))
-                {    
+                {
                     Byte[] content = new UTF8Encoding(true).GetBytes(stringToFile.ToString());
                     fs.Write(content, 0, content.Length);
                 }
             }
-            catch    
-            {    
-                Console.WriteLine("Failai neirasyti");    
+            catch
+            {
+                Console.WriteLine("Failai neirasyti");
             }
         }
     }
