@@ -24,7 +24,7 @@ namespace IPA_laborai_3_4
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\1000students_generated.txt",
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\10000students_generated.txt",
             @"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt"
-        }
+        };
 
         public static void Main(string[] args)
         {
@@ -62,7 +62,7 @@ namespace IPA_laborai_3_4
                 if (dataInput.Equals("4"))
                 {
                     FileGenerator();
-                    GroupToFiles();
+                    GroupToFiles(@"C:\\Users\\Matas\\RiderProjects\\IPA_laborai_3_4\\100000students_generated.txt");
                     break;
                 }
 
@@ -88,7 +88,8 @@ namespace IPA_laborai_3_4
                 watch = Stopwatch.StartNew();
                 GroupToFiles(path, false, list);
                 watch.Stop();
-                Console.WriteLine(path + " ||| uzima: " + watch.ElapsedMilliseconds);
+                long elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds +"s");
             }
         }
 
