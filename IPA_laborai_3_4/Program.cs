@@ -602,6 +602,35 @@ namespace IPA_laborai_3_4
                 Environment.Exit(1);
             }
 
+            switch (list)
+            {
+                case "LIST":
+                {
+                    smart = smartList;
+                    dumb = dumbList;
+                    break;
+                }
+                case "LINKEDLIST":
+                {
+                    smart = smartLinkedList;
+                    dumb = dumbLinkedList;
+                    break;
+                }
+                case "QUEUE":
+                {
+                    smart = smartQueue;
+                    dumb = dumbQueue;
+                    break;
+                }
+                default:
+                {
+                    smart = smartList;
+                    dumb = dumbList;
+                    break;
+                }
+                
+            }
+
             try
             {
                 if (File.Exists(dumbPath) || File.Exists(smartPath))
