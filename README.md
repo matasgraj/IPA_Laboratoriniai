@@ -47,3 +47,44 @@ Rezultatai:
 1000 - ~0.7 sec
 10000 - 1 sec
 100000 - 1.2 sec
+
+# v0.5
+
+Atlikta:
+* Perdaryta logika, priimanti List, LinkedList ir Queue tipo konteinerius
+* Performace testing rusiavimui su skirtingo tipo konteineriais
+* Padarytas relus performance rezultatu isvedimas
+
+Rezultatai:
+LIST rusiavimas
+...10students_generated.txt ||| uzima: 0.008s
+...100students_generated.txt ||| uzima: 0.001s
+...1000students_generated.txt ||| uzima: 0.004s
+...10000students_generated.txt ||| uzima: 0.031s
+...100000students_generated.txt ||| uzima: 0.347s
+QUEUE rusiavimas
+...10students_generated.txt ||| uzima: 0.001s
+...100students_generated.txt ||| uzima: 0.001s
+...1000students_generated.txt ||| uzima: 0.003s
+...10000students_generated.txt ||| uzima: 0.033s
+...100000students_generated.txt ||| uzima: 0.398s
+LINKEDLIST rusiavimas
+...10students_generated.txt ||| uzima: 0.001s
+...100students_generated.txt ||| uzima: 0.001s
+...1000students_generated.txt ||| uzima: 0.003s
+...10000students_generated.txt ||| uzima: 0.034s
+...100000students_generated.txt ||| uzima: 0.387s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
