@@ -42,11 +42,11 @@ Atlikta:
 Testuota programos greitaveika su 10, 100, 1000, 10000, 100000 irasu.
 
 Rezultatai:
-10 - ~0.2 sec
-100 - ~0.5 sec
-1000 - ~0.7 sec
-10000 - 1 sec
-100000 - 1.2 sec
+10 - ~0.2 sec  
+100 - ~0.5 sec  
+1000 - ~0.7 sec  
+10000 - 1 sec  
+100000 - 1.2 sec  
 
 # v0.5
 
@@ -64,13 +64,13 @@ Atlikta:
 |...10000students_generated.txt | 0.031s|
 |...100000students_generated.txt | 0.347s|
 
-|QUEUE rusiavimas                            |
-|--------------------------------------------|
-|...10students_generated.txt ||| uzima: 0.001s|
-|...100students_generated.txt ||| uzima: 0.001s|
-|...1000students_generated.txt ||| uzima: 0.003s|
-|...10000students_generated.txt ||| uzima: 0.033s|
-|...100000students_generated.txt ||| uzima: 0.398s|
+|QUEUE rusiavimas                            |Laikas sekundemis|
+|--------------------------------------------|-----------------|
+|...10students_generated.txt | 0.001s|
+|...100students_generated.txt | 0.001s|
+|...1000students_generated.txt | 0.003s|
+|...10000students_generated.txt | 0.033s|
+|...100000students_generated.txt | 0.398s|
 
 |LINKEDLIST rusiavimas                       |Laikas sekundemis|
 |--------------------------------------------|-----------------|
@@ -84,7 +84,34 @@ Atlikta:
 
 Ismatuoti 5 skirtingu failu rusiavimas pagal 2 strategijas, skaiciuojant laika ir uzimamos atminties dydi.
 
-## 1 Strategija
+### 1 Strategija
+
+|LIST rusiavimas                             |Laikas sekundemis| Panaudito baitai|
+|--------------------------------------------|-----------------|-----------------|
+|...10students_generated.txt | 0.008s| 10 653 696
+|...100students_generated.txt | 0.001s| 10 850 304
+|...1000students_generated.txt | 0.004s| 12 357 632
+|...10000students_generated.txt | 0.031s| 20 127 744
+|...100000students_generated.txt | 0.347s| 55 693 312
+
+|QUEUE rusiavimas                            |Laikas sekundemis| Panaudito baitai|
+|--------------------------------------------|-----------------|-----------------|
+|...10students_generated.txt | 0.001s| 55 697 408
+|...100students_generated.txt | 0.001s| 55 697 408
+|...1000students_generated.txt | 0.003s| 55 697 408
+|...10000students_generated.txt | 0.033s| 59 973 632
+|...100000students_generated.txt | 0.398s| 58 343 424
+
+|LINKEDLIST rusiavimas                       |Laikas sekundemis| Panaudito baitai|
+|--------------------------------------------|-----------------|-----------------|
+|...10students_generated.txt | 0.001s| 58 343 424
+|...100students_generated.txt | 0.001s| 58 343 424
+|...1000students_generated.txt | 0.003s| 58 343 424
+|...10000students_generated.txt | 0.034s| 59 973 632
+|...100000students_generated.txt | 0.387s| 61 222 912
+
+Maziausiai atminties uzima ``LIST`` tipo konteineris, taciau jis leciau veikia su nedideliu duomenu kiekiu.  
+Optimaliausias variantas naudti ``LINKEDLIST`` tipo konteineri, laiko ir uzimamos vietos santykiu.
 
 
 
