@@ -90,6 +90,9 @@ namespace IPA_laborai_3_4
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds + "s");
+                
+                Process proc = Process.GetCurrentProcess();
+                Console.WriteLine("Panaudota baitu atminties: " + proc.PrivateMemorySize64);
             }
         }
 
