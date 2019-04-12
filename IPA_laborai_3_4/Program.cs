@@ -90,6 +90,9 @@ namespace IPA_laborai_3_4
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds + "s");
+
+                Process proc = Process.GetCurrentProcess();
+                Console.WriteLine("Panaudota baitu atminties: " + proc.PrivateMemorySize64);
             }
         }
 
@@ -525,6 +528,7 @@ namespace IPA_laborai_3_4
 
             Queue<Student> dumbQueue = new Queue<Student>();
             Queue<Student> smartQueue = new Queue<Student>();
+            Queue<Student> smarterQueue = new Queue<Student>();
 
             LinkedList<Student> dumbLinkedList = new LinkedList<Student>();
             LinkedList<Student> smartLinkedList = new LinkedList<Student>();
@@ -549,56 +553,92 @@ namespace IPA_laborai_3_4
                     {
                         case "LIST":
                         {
-                            if (student.AvgResult >= 5)
+                            smartList.Add(student);
+                            break;
+                        }
+                        case "LINKEDLIST":
+                        {
+                            smartLinkedList.AddLast(student);
+
+                            break;
+                        }
+                        case "QUEUE":
+                        {
+                            smartQueue.Enqueue(student);
+                            break;
+                        }
+                        default:
+                            smartList.Add(student);
+
+                            break;
+                    }
+                }
+
+                /*      */
+
+                    switch (list)
+                    {
+                        case "LIST":
+                        {
+                            for (int i = 0; i < smartList.Count; i++)
                             {
-                                smartList.Add(student);
-                            }
-                            else
-                            {
-                                dumbList.Add(student);
+                                if (smartList[i].AvgResult < 5)
+                                {
+                                    dumbList.Add(smartList[i]);
+                                    smartList.RemoveAt(i);
+                                }
                             }
 
                             break;
                         }
                         case "LINKEDLIST":
                         {
-                            if (student.AvgResult >= 5)
+                            var node = smartLinkedList.First;
+                            while (node != null)
                             {
-                                smartLinkedList.AddLast(student);
-                            }
-                            else
-                            {
-                                dumbLinkedList.AddLast(student);
+                                var next = node.Next;
+
+                                Student student = node.Value;
+
+                                if (student.AvgResult < 5)
+                                {
+                                    dumbLinkedList.AddLast(student);
+                                    smartLinkedList.Remove(node);
+                                }
+
+                                node = next;
                             }
 
                             break;
                         }
                         case "QUEUE":
                         {
-                            if (student.AvgResult >= 5)
+                            foreach (var smartGuy in smartQueue)
                             {
-                                smartQueue.Enqueue(student);
-                            }
-                            else
-                            {
-                                dumbQueue.Enqueue(student);
+                                if (smartGuy.AvgResult < 5)
+                                {
+                                    dumbQueue.Enqueue(smartGuy);
+                                }
+                                else
+                                {
+                                    smarterQueue.Enqueue(smartGuy);
+                                }
                             }
 
                             break;
                         }
                         default:
-                            if (student.AvgResult >= 5)
+                            for (int i = 0; i < smartList.Count; i++)
                             {
-                                smartList.Add(student);
-                            }
-                            else
-                            {
-                                dumbList.Add(student);
+                                if (smartList[i].AvgResult < 5)
+                                {
+                                    dumbList.Add(smartList[i]);
+                                    smartList.RemoveAt(i);
+                                }
                             }
 
                             break;
                     }
-                }
             }
             catch
             {
@@ -622,7 +662,7 @@ namespace IPA_laborai_3_4
                 }
                 case "QUEUE":
                 {
-                    smart = smartQueue;
+                    smart = smarterQueue;
                     dumb = dumbQueue;
                     break;
                 }
