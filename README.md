@@ -55,25 +55,37 @@ Atlikta:
 * Performace testing rusiavimui su skirtingo tipo konteineriais
 * Padarytas relus performance rezultatu isvedimas
 
-Rezultatai:
-LIST rusiavimas
-...10students_generated.txt ||| uzima: 0.008s
-...100students_generated.txt ||| uzima: 0.001s
-...1000students_generated.txt ||| uzima: 0.004s
-...10000students_generated.txt ||| uzima: 0.031s
-...100000students_generated.txt ||| uzima: 0.347s
-QUEUE rusiavimas
-...10students_generated.txt ||| uzima: 0.001s
-...100students_generated.txt ||| uzima: 0.001s
-...1000students_generated.txt ||| uzima: 0.003s
-...10000students_generated.txt ||| uzima: 0.033s
-...100000students_generated.txt ||| uzima: 0.398s
-LINKEDLIST rusiavimas
-...10students_generated.txt ||| uzima: 0.001s
-...100students_generated.txt ||| uzima: 0.001s
-...1000students_generated.txt ||| uzima: 0.003s
-...10000students_generated.txt ||| uzima: 0.034s
-...100000students_generated.txt ||| uzima: 0.387s
+### Rezultatai:
+|LIST rusiavimas                             |Laikas sekundemis|
+|--------------------------------------------|-----------------|
+|...10students_generated.txt | 0.008s|
+|...100students_generated.txt | 0.001s|
+|...1000students_generated.txt | 0.004s|
+|...10000students_generated.txt | 0.031s|
+|...100000students_generated.txt | 0.347s|
+
+|QUEUE rusiavimas                            |
+|--------------------------------------------|
+|...10students_generated.txt ||| uzima: 0.001s|
+|...100students_generated.txt ||| uzima: 0.001s|
+|...1000students_generated.txt ||| uzima: 0.003s|
+|...10000students_generated.txt ||| uzima: 0.033s|
+|...100000students_generated.txt ||| uzima: 0.398s|
+
+|LINKEDLIST rusiavimas                       |Laikas sekundemis|
+|--------------------------------------------|-----------------|
+|...10students_generated.txt | 0.001s|
+|...100students_generated.txt | 0.001s|
+|...1000students_generated.txt | 0.003s|
+|...10000students_generated.txt | 0.034s|
+|...100000students_generated.txt | 0.387s|
+
+# v1.0
+
+Ismatuoti 5 skirtingu failu rusiavimas pagal 2 strategijas, skaiciuojant laika ir uzimamos atminties dydi.
+
+## 1 Strategija
+
 
 
 
