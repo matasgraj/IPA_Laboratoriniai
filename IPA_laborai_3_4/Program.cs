@@ -90,7 +90,7 @@ namespace IPA_laborai_3_4
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Console.WriteLine(path + " ||| uzima: " + TimeSpan.FromMilliseconds(elapsedMs).TotalSeconds + "s");
-                
+
                 Process proc = Process.GetCurrentProcess();
                 Console.WriteLine("Panaudota baitu atminties: " + proc.PrivateMemorySize64);
             }
@@ -544,6 +544,36 @@ namespace IPA_laborai_3_4
             {
                 dataSet = File.ReadAllLines(path);
 
+                foreach (var line in dataSet)
+                {
+                    var student = GetStudentData(true, line);
+
+                    switch (list)
+                    {
+                        case "LIST":
+                        {
+                            smartList.Add(student);
+                            break;
+                        }
+                        case "LINKEDLIST":
+                        {
+                            smartLinkedList.AddLast(student);
+
+                            break;
+                        }
+                        case "QUEUE":
+                        {
+                            smartQueue.Enqueue(student);
+                            break;
+                        }
+                        default:
+                            smartList.Add(student);
+
+                            break;
+                    }
+                }
+
+                /*      */
                 foreach (var line in dataSet)
                 {
                     var student = GetStudentData(true, line);
